@@ -1,7 +1,92 @@
 .user-stories-bg-container {
-  border: 2px solid red;
 }
 .slider-container {
   padding: 20px;
-  background-color: green;
+  width: 80%;
+  max-width: 1200px;
+  margin-top: 10px;
+  margin-left: 15vh;
+}
+
+.user-name {
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: center;
+}
+.story-img {
+  width: 70px;
+  height: 70px;
+  top: 112px;
+  left: 274px;
+  border-radius: 35px;
+  margin-left: 30px;
+}
+.slick-prev:before,
+.slick-next:before {
+  color: #000;
+}
+
+@media (max-width: 767px) {
+  .slider-container {
+    padding: 36px;
+    width: 350px;
+    margin-left: 0;
+  }
+  .story-img {
+    width: 50px;
+    height: 50px;
+    top: 80px;
+    left: 48px;
+    border-radius: 25px;
+  }
+  .user-name {
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
+}
+.failure-text {
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+.alert-icon {
+  color: #4094ef;
+  width: 44px;
+  height: 38px;
+  top: 4px;
+  left: 2px;
+}
+.try-again-btn {
+  width: Hug (102px);
+  height: 32px;
+  padding: 8px, 24px, 8px, 24px;
+  border-radius: 8px;
+  gap: 8px;
+
+  background-color: #4094ef;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+}
+.failure-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+.loader-container {
+  margin-top: 60px;
 }

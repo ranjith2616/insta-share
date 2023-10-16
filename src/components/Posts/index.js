@@ -1,29 +1,34 @@
 import {Component} from 'react'
-import Cookies from 'js-cookie'
 
-import Slider from 'react-slick'
+import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 
 import './styles.css'
 
+import PostDetails from '../PostDetails'
+
 const apiStatusConstraints = {
   initial: 'INITIAL',
   success: 'SUCCESS',
-  inProgress: 'INPROGRESS',
   failure: 'FAILURE',
+  inProgress: 'INPROGRESS',
 }
 
-class UserStories extends Component {
-  state = {stories: [], api: apiStatusConstraints.initial}
+class Posts extends Component {
+  state = {postsData: [], api: apiStatusConstraints.initial}
 
   componentDidMount() {
-    this.getUserStories()
+    this.getPostData()
   }
 
-  getUserStories = async () => {
+  likePostButton = id => {
+    console.log(id)
+  }
+
+  getPostData = async () => {
     this.setState({api: apiStatusConstraints.inProgress})
 
-    const url = 'https://apis.ccbp.in/insta-share/stories'
+    const url = 'https://apis.ccbp.in/insta-share/posts'
 
     const token = Cookies.get('jwt_token')
 
@@ -38,67 +43,50 @@ class UserStories extends Component {
     const data = await response.json()
 
     if (response.ok) {
-      const updatedData = data.users_stories.map(each => ({
+      console.log(data)
+      const updatedData = data.posts.map(each => ({
+        createdAt: each.created_at,
+        likesCount: each.likes_count,
+        postId: each.post_id,
+        profilePic: each.profile_pic,
         userId: each.user_id,
-        storyUrl: each.story_url,
         userName: each.user_name,
+        postDetails: each.post_details,
+        imageUrl: each.post_details.image_url,
+        caption: each.post_details.caption,
+        comments: each.comments.map(eachComment => ({
+          comment: eachComment.comment,
+          userId: eachComment.user_id,
+          userName: eachComment.user_name,
+        })),
       }))
-      this.setState({api: apiStatusConstraints.success, stories: updatedData})
+
+      this.setState({postsData: updatedData, api: apiStatusConstraints.success})
     } else {
       this.setState({api: apiStatusConstraints.failure})
     }
   }
 
   renderSuccessView = () => {
-    const {stories} = this.state
-
-    const settings = {
-      dots: false,
-      infinite: false,
-      speed: 500,
-      slidesToShow: 7,
-      slidesToScroll: 1,
-      responsive: [
-        {
-          breakpoint: 1024,
-          settings: {
-            slidesToShow: 5,
-            slidesToScroll: 1,
-          },
-        },
-        {
-          breakpoint: 600,
-          settings: {
-            slidesToShow: 3,
-            slidesToScroll: 1,
-          },
-        },
-        {
-          breakpoint: 480,
-          settings: {
-            slidesToShow: 2,
-            slidesToScroll: 1,
-          },
-        },
-      ],
-    }
+    const {postsData} = this.state
 
     return (
-      <div className="slider-container">
-        <Slider {...settings}>
-          {stories.map(each => (
-            <div key={each.userId} className="slides-card">
-              <img src={each.storyUrl} alt="user story" className="story-img" />
-              <h1 className="user-name"> {each.userName}</h1>
-            </div>
+      <div>
+        <ul className="post-details-container">
+          {postsData.map(each => (
+            <PostDetails
+              key={each.postId}
+              postDetails={each}
+              likePostButton={this.likePostButton}
+            />
           ))}
-        </Slider>
+        </ul>
       </div>
     )
   }
 
   onTryAgainBtn = () => {
-    this.getUserStories()
+    this.getPostData()
   }
 
   renderFailureView = () => (
@@ -121,12 +109,12 @@ class UserStories extends Component {
   )
 
   renderLoadingView = () => (
-    <div className="loader-container">
+    <div className="post-loader-container">
       <Loader type="TailSpin" color="#4094EF" height={50} width={50} />
     </div>
   )
 
-  renderUserStoriesRoute = () => {
+  renderPostField = () => {
     const {api} = this.state
 
     switch (api) {
@@ -143,11 +131,13 @@ class UserStories extends Component {
 
   render() {
     return (
-      <div className="user-stories-bg-container">
-        {this.renderUserStoriesRoute()}
+      <div className="post-bg-container">
+        <div className="post-responsive-container">
+          {this.renderPostField()}
+        </div>
       </div>
     )
   }
 }
 
-export default UserStories
+export default Posts

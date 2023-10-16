@@ -97,9 +97,11 @@
 
 @media (max-width: 767px) {
   .header-bg-container {
-    width: 360px;
+    width: 350px;
     display: flex;
     justify-content: space-between;
+    padding: 10px;
+    border: 2px solid red;
   }
   .header-right-side-container {
     display: none;

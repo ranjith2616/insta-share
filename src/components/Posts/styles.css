@@ -1,0 +1,14 @@
+.post-details-container {
+  list-style-type: none;
+  padding-left: 0;
+}
+.failure-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20vh;
+}
+.post-loader-container {
+  margin-top: 30vh;
+}
