@@ -3,10 +3,11 @@ import {Component} from 'react'
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 
+import InstaShare from '../../context/InstaShare'
+
 import './styles.css'
 
 import PostDetails from '../PostDetails'
-import InstaShare from '../../context/InstaShare'
 
 const apiStatusConstraints = {
   initial: 'INITIAL',
@@ -19,11 +20,12 @@ class Posts extends Component {
   state = {
     postsData: [],
     api: apiStatusConstraints.initial,
-    val: '',
   }
 
   componentDidMount() {
-    this.getPostData()
+    const {searchData} = this.context
+    console.log(searchData)
+    this.getPostData(searchData)
   }
 
   likePostButton = async id => {
@@ -71,10 +73,11 @@ class Posts extends Component {
     }
   }
 
-  getPostData = async () => {
+  getPostData = async searchData => {
     this.setState({api: apiStatusConstraints.inProgress})
 
-    const url = `https://apis.ccbp.in/insta-share/posts`
+    const url = `https://apis.ccbp.in/insta-share/posts?search=${searchData}`
+    console.log(url)
 
     const token = Cookies.get('jwt_token')
 
@@ -185,5 +188,7 @@ class Posts extends Component {
     )
   }
 }
+
+Posts.contextType = InstaShare
 
 export default Posts
