@@ -57,6 +57,7 @@
   left: 24px;
   padding: 2px, 0.76px, 2px, 0px;
 }
+
 .icon-btn {
   border: 0;
   background-color: transparent;
@@ -119,4 +120,8 @@
     width: 350px;
     border: 0;
   }
+}
+.link {
+  text-decoration: none;
+  color: #475569;
 }

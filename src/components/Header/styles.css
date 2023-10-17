@@ -1,5 +1,4 @@
 .header-bg-container {
-  width: 1440px;
   height: 64px;
   padding: 10px;
 }
@@ -98,10 +97,10 @@
 @media (max-width: 767px) {
   .header-bg-container {
     width: 350px;
+
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    border: 2px solid red;
   }
   .header-right-side-container {
     display: none;
@@ -151,12 +150,28 @@
     cursor: pointer;
     outline: none;
   }
+  .mobile-input-card {
+    width: 214px;
+    height: 28px;
+    top: 18px;
+    left: 781px;
+    border-radius: 3px;
+    border: 1px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #dbdbdb;
+    border-radius: 0px, 2px, 2px, 0px;
+    margin-left: 50px;
+  }
 }
 @media (min-width: 768px) {
   .hamburger-btn {
     display: none;
   }
   .mobile-menu-card {
+    display: none;
+  }
+  .mobile-input-card {
     display: none;
   }
 }

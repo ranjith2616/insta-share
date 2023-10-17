@@ -6,6 +6,7 @@ import Loader from 'react-loader-spinner'
 import './styles.css'
 
 import PostDetails from '../PostDetails'
+import InstaShare from '../../context/InstaShare'
 
 const apiStatusConstraints = {
   initial: 'INITIAL',
@@ -15,20 +16,65 @@ const apiStatusConstraints = {
 }
 
 class Posts extends Component {
-  state = {postsData: [], api: apiStatusConstraints.initial}
+  state = {
+    postsData: [],
+    api: apiStatusConstraints.initial,
+    val: '',
+  }
 
   componentDidMount() {
     this.getPostData()
   }
 
-  likePostButton = id => {
-    console.log(id)
+  likePostButton = async id => {
+    const {postsData} = this.state
+
+    const url = `https://apis.ccbp.in/insta-share/posts/${id}/like`
+
+    const token = Cookies.get('jwt_token')
+
+    const find = postsData.find(each => each.postId === id)
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id,
+        like_status: find.like,
+      }),
+    }
+
+    const response = await fetch(url, options)
+    const data = await response.json()
+
+    if (response.ok) {
+      if (data.message === 'Post has been disliked') {
+        const filteredData = postsData.map(each => {
+          if (each.postId === id) {
+            return {...each, like: true, likesCount: each.likesCount + 1}
+          }
+          return each
+        })
+
+        this.setState({postsData: filteredData})
+      } else if (data.message === 'Post has been liked') {
+        const filteredData = postsData.map(each => {
+          if (each.postId === id) {
+            return {...each, like: false, likesCount: each.likesCount - 1}
+          }
+          return each
+        })
+        this.setState({postsData: filteredData})
+      }
+    }
   }
 
   getPostData = async () => {
     this.setState({api: apiStatusConstraints.inProgress})
 
-    const url = 'https://apis.ccbp.in/insta-share/posts'
+    const url = `https://apis.ccbp.in/insta-share/posts`
 
     const token = Cookies.get('jwt_token')
 
@@ -43,7 +89,6 @@ class Posts extends Component {
     const data = await response.json()
 
     if (response.ok) {
-      console.log(data)
       const updatedData = data.posts.map(each => ({
         createdAt: each.created_at,
         likesCount: each.likes_count,
@@ -59,6 +104,7 @@ class Posts extends Component {
           userId: eachComment.user_id,
           userName: eachComment.user_name,
         })),
+        like: false,
       }))
 
       this.setState({postsData: updatedData, api: apiStatusConstraints.success})

@@ -1,12 +1,12 @@
 import {Component} from 'react'
-
 import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 
 import Header from '../Header'
-import MyProfileDetails from '../MyProfileDetails'
 
-import './styles.css'
+import UserProfileDetails from '../UserProfileDetails'
+
+import './styled.css'
 
 const apiStatusConstraints = {
   initial: 'INITIAL',
@@ -15,17 +15,20 @@ const apiStatusConstraints = {
   inProgress: 'INPROGRESS',
 }
 
-class MyProfile extends Component {
-  state = {myProfileData: [], api: apiStatusConstraints.initial}
+class UserProfile extends Component {
+  state = {userData: [], api: apiStatusConstraints.initial}
 
   componentDidMount() {
-    this.getMyProfileData()
+    this.getUserDetails()
   }
 
-  getMyProfileData = async () => {
+  getUserDetails = async () => {
     this.setState({api: apiStatusConstraints.inProgress})
+    const {match} = this.props
+    const {params} = match
+    const {id} = params
 
-    const url = 'https://apis.ccbp.in/insta-share/my-profile'
+    const url = `https://apis.ccbp.in/insta-share/users/${id}`
 
     const token = Cookies.get('jwt_token')
 
@@ -35,53 +38,46 @@ class MyProfile extends Component {
         Authorization: `Bearer ${token}`,
       },
     }
-
     const response = await fetch(url, options)
     const data = await response.json()
 
     if (response.ok) {
       const updatedData = {
-        id: data.profile.id,
-        followersCount: data.profile.followers_count,
-        followingCount: data.profile.following_count,
-        postsCount: data.profile.posts_count,
-        profilePic: data.profile.profile_pic,
-        userBio: data.profile.user_bio,
-        userName: data.profile.user_name,
-        userId: data.profile.user_id,
-        posts: data.profile.posts.map(each => ({
+        id: data.user_details.id,
+        followersCount: data.user_details.followers_count,
+        followingCount: data.user_details.following_count,
+        postsCount: data.user_details.posts_count,
+        profilePic: data.user_details.profile_pic,
+        userBio: data.user_details.user_bio,
+        userName: data.user_details.user_name,
+        userId: data.user_details.user_id,
+        posts: data.user_details.posts.map(each => ({
           id: each.id,
           image: each.image,
         })),
-        stories: data.profile.stories.map(eachStory => ({
+        stories: data.user_details.stories.map(eachStory => ({
           id: eachStory.id,
           image: eachStory.image,
         })),
       }
-      this.setState({
-        myProfileData: updatedData,
-        api: apiStatusConstraints.success,
-      })
+      this.setState({userData: updatedData, api: apiStatusConstraints.success})
     } else {
       this.setState({api: apiStatusConstraints.failure})
     }
   }
 
   renderSuccessView = () => {
-    const {myProfileData} = this.state
-
-    const {match} = this.props
-    const {path} = match
+    const {userData} = this.state
 
     return (
-      <div className="profile-bg-container">
-        <MyProfileDetails userDetails={myProfileData} path={path} />
+      <div className="user-profile-bg-container">
+        <UserProfileDetails userDetails={userData} />
       </div>
     )
   }
 
   onTryAgainBtn = () => {
-    this.getMyProfileData()
+    this.getUserDetails()
   }
 
   renderFailureView = () => (
@@ -109,7 +105,7 @@ class MyProfile extends Component {
     </div>
   )
 
-  renderMyProfileRoute = () => {
+  renderUserProfileRoute = () => {
     const {api} = this.state
 
     switch (api) {
@@ -128,11 +124,10 @@ class MyProfile extends Component {
     return (
       <>
         <Header />
-
-        <div>{this.renderMyProfileRoute()}</div>
+        <div>{this.renderUserProfileRoute()}</div>
       </>
     )
   }
 }
 
-export default MyProfile
+export default UserProfile

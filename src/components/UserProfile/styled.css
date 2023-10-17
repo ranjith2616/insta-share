@@ -1,0 +1,14 @@
+.user-profile-bg-container {
+  min-height: 100vh;
+  max-height: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.user-profile-loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20vh;
+}

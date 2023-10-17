@@ -8,11 +8,13 @@ import {FaSearch} from 'react-icons/fa'
 import {FiMenu} from 'react-icons/fi'
 import {AiFillCloseCircle} from 'react-icons/ai'
 
+import PostDetails from '../PostDetails'
+
 class Header extends Component {
-  state = {menuClicked: false}
+  state = {menuClicked: false, search: '', showSearch: false}
 
   onMenuBtn = () => {
-    this.setState({menuClicked: true})
+    this.setState({menuClicked: true, showSearch: false})
   }
 
   onCloseIcon = () => {
@@ -25,8 +27,26 @@ class Header extends Component {
     history.replace('/login')
   }
 
+  onSearchInput = event => {
+    this.setState({search: event.target.value})
+  }
+
+  onSearchButton = () => {
+    const {search} = this.state
+
+    return (
+      <div>
+        <PostDetails a={search} />
+      </div>
+    )
+  }
+
+  onSearchText = () => {
+    this.setState({showSearch: true, menuClicked: false})
+  }
+
   render() {
-    const {menuClicked} = this.state
+    const {menuClicked, search, showSearch} = this.state
 
     const {match} = this.props
     const {path} = match
@@ -50,11 +70,14 @@ class Header extends Component {
                   type="search"
                   placeholder="Search Caption"
                   className="search-input"
+                  value={search}
+                  onChange={this.onSearchInput}
                 />
                 <button
                   type="button"
                   className="search-btn-icon"
                   data-testid="searchIcon"
+                  onClick={this.onSearchButton}
                 >
                   {' '}
                   <FaSearch />
@@ -128,7 +151,10 @@ class Header extends Component {
               {' '}
               Profile
             </Link>
-            <p className="search-text"> Search</p>
+            <p className="search-text" onClick={this.onSearchText}>
+              {' '}
+              Search
+            </p>
             <button
               type="button"
               className="logout-btn"
@@ -145,6 +171,27 @@ class Header extends Component {
             >
               {' '}
               <AiFillCloseCircle className="close-icon" />
+            </button>
+          </div>
+        )}
+
+        {showSearch && (
+          <div className="mobile-input-card">
+            <input
+              type="search"
+              placeholder="Search Caption"
+              className="search-input"
+              value={search}
+              onChange={this.onSearchInput}
+            />
+            <button
+              type="button"
+              className="search-btn-icon"
+              data-testid="searchIcon"
+              onClick={this.onSearchButton}
+            >
+              {' '}
+              <FaSearch />
             </button>
           </div>
         )}

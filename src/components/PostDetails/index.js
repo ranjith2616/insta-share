@@ -1,5 +1,7 @@
 import './styles.css'
 
+import {Link} from 'react-router-dom'
+
 import {BsHeart} from 'react-icons/bs'
 
 import {FcLike} from 'react-icons/fc'
@@ -20,6 +22,8 @@ const PostDetails = props => {
     imageUrl,
     caption,
     comments,
+    like,
+    userId,
   } = postDetails
 
   const onClickLikeBtn = () => {
@@ -28,14 +32,16 @@ const PostDetails = props => {
 
   return (
     <li className="post-detailed-card">
-      <div className="profile-card">
-        <img
-          src={profilePic}
-          alt="post author profile"
-          className="post-author-img"
-        />
-        <h1 className="author-name"> {userName}</h1>
-      </div>
+      <Link to={`/users/${userId}`} className="link">
+        <div className="profile-card">
+          <img
+            src={profilePic}
+            alt="post author profile"
+            className="post-author-img"
+          />
+          <h1 className="author-name"> {userName}</h1>
+        </div>
+      </Link>
 
       <div>
         <img src={imageUrl} alt="post" className="post-img" />
@@ -43,7 +49,7 @@ const PostDetails = props => {
 
       <div className="post-bottom-container">
         <button type="button" className="icon-btn" onClick={onClickLikeBtn}>
-          <BsHeart className="icon" />
+          {like ? <FcLike className="icon" /> : <BsHeart className="icon" />}
         </button>
 
         <button type="button" className="icon-btn">
